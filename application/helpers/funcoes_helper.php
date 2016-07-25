@@ -40,3 +40,20 @@ function load_js($arquivo=NULL, $echo = TRUE)
         endif;
     }
 } #fim load js.
+
+define('MGSUCESSO', ' success');
+define('MGALERT', ' warning');
+define('MGINFO', ' info');
+define('MGERROR', ' alert');
+
+function mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
+    $mensagem ='<section data-alert class="alert-box '.$tipo.'" '.$extras.'>';
+    $mensagem  .= $texto;
+    $mensagem .='<a href="#" class="close">&times;</a></section>';
+    if($echo):
+        echo $mensagem;
+    else:
+        return $mensagem;        
+    endif;
+        
+}
