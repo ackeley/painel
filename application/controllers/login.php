@@ -4,12 +4,10 @@ class login extends CI_Controller {
 
     public function index()
 	{
-            $this->load->helper('url');
-            $this->load->helper('funcoes');
-            $this->load->helper('form');
-//            load_css('foundation');
-//            load_js('vendor/jquery');
-            $this->load->view('login');
+            set_tema('css', load_css('normalize'),false);   
+            set_tema('css', load_css('foundation.min'),false);   
+            set_tema('template', 'login'); 
+            load_template();
 	}
 }
 

@@ -2,9 +2,7 @@
     <head>        
         <meta charset="UTF-8">
         <title>Login Painel</title>
-            <?php
-                load_css('foundation');
-            ?>
+          {css}
     </head>
     <body>
         <section class="row">

@@ -1,6 +1,6 @@
 <?php
 
-function load_css($arquivo=null,$media='screen',$import=FALSE, $echo=TRUE)
+function load_css($arquivo=null,$media='screen',$import=FALSE, $echo=FALSE)
 {
      $css = '';
     if($import == TRUE){
@@ -56,4 +56,35 @@ function mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
         return $mensagem;        
     endif;
         
+}
+
+function get_tema(){
+    $ci=& get_instance();
+    $ci->load->library('sistema');
+    return $ci->sistema->tema;    
+}
+
+function set_tema($propriedade, $valor, $replace = TRUE){
+    $ci =& get_instance();
+    $ci->load->library('sistema');
+    if($replace):        
+        $ci->sistema->tema[$propriedade] = $valor;
+    else:
+        if(!isset($ci->sistema->tema[$propriedade]))$ci->sistema->tema[$propriedade] = "";
+        $ci->sistema->tema[$propriedade] .= $valor;
+    endif;
+}
+
+function load_template(){
+    $ci=& get_instance();
+    $ci->load->library('sistema');
+    if(isset($ci->sistema->tema['header'])){
+        $ci->parser->parse($ci->sistema->tema['header'], get_tema());
+    }
+    if(isset($ci->sistema->tema['template'])){
+        $ci->parser->parse($ci->sistema->tema['template'], get_tema());
+    }
+    if(isset($ci->sistema->tema['footer'])){
+        $ci->parser->parse($ci->sistema->tema['footer'], get_tema());
+    }
 }
