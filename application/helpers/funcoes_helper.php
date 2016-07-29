@@ -58,6 +58,11 @@ function mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
         
 }
 
+function get_data_form($campo, $tipo = 'post'){
+    $ci =& get_instance();
+    return $ci->input->$tipo($campo);
+}
+
 function get_tema(){
     $ci=& get_instance();
     $ci->load->library('sistema');
@@ -86,5 +91,14 @@ function load_template(){
     }
     if(isset($ci->sistema->tema['footer'])){
         $ci->parser->parse($ci->sistema->tema['footer'], get_tema());
+    }
+}
+
+function get_valor_sessao($valor, $nome_session = 'usuario_logado'){
+    $ci =& get_instance();
+    $ci->load->library('session');
+    $get_session = $ci->session->userdata($nome_session);
+    if($get_session){
+        return $get_session[$valor];
     }
 }

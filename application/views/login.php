@@ -15,10 +15,10 @@
                 <fieldset>
                     <legend>Identifique-se</legend>
                 <?php 
-                    echo form_open('usuarios/logar');
+                    echo form_open('login/logar');
                     mensagem('Usuário ou senha inválida', MGERROR);
                     echo form_label('Login', 'login');
-                    echo form_input('login', set_value('login'), 'id="login"');
+                    echo form_input('email', set_value('login'), 'id="login"');
                     
                     echo form_label('Senha', 'senha');
                     echo form_password('senha', NULL, 'id="senha"');
