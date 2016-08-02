@@ -2,7 +2,7 @@
 
 function load_css($arquivo=null,$media='screen',$import=FALSE, $echo=FALSE)
 {
-     $css = '';
+    $css = '';
     if($import == TRUE){
         $css =  '<link rel="stylesheet" href="'.$arquivo.'" media="'.$media.'"/>'."\n";
     }
@@ -46,8 +46,8 @@ define('MGALERT', ' warning');
 define('MGINFO', ' info');
 define('MGERROR', ' alert');
 
-function mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
-    $mensagem ='<section data-alert class="alert-box '.$tipo.'" '.$extras.'>';
+function set_mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
+    $mensagem ='<section class="alert alert-'.$tipo.'" '.$extras.'>';
     $mensagem  .= $texto;
     $mensagem .='<a href="#" class="close">&times;</a></section>';
     if($echo):
@@ -56,6 +56,16 @@ function mensagem($texto, $tipo, $extras=NULL, $echo=TRUE){
         return $mensagem;        
     endif;
         
+}
+function set_notification($mensagem=NULL,$tipo = 'success', $id_notificacao='ok'){
+    $ci =&get_instance();    
+    $ci->load->library('session');
+    $ci->session->set_flashdata($id_notificacao, set_mensagem($mensagem, $tipo,NULL, FALSE));
+}
+function get_notification($id_notification='ok'){
+    $ci =& get_instance();    
+    $ci->load->library('session');
+    return  $ci->session->flashdata($id_notification);
 }
 
 function get_data_form($campo, $tipo = 'post'){
@@ -94,11 +104,18 @@ function load_template(){
     }
 }
 
-function get_valor_sessao($valor, $nome_session = 'usuario_logado'){
+function get_valor_sessao($valor=NULL, $nome_session = 'usuario_logado'){
     $ci =& get_instance();
-    $ci->load->library('session');
+    $ci->load->library('session');;
     $get_session = $ci->session->userdata($nome_session);
+   
     if($get_session){
         return $get_session[$valor];
     }
+}
+
+function init_dashboard(){
+        set_tema('header', 'painel/header');
+        set_tema('footer', 'painel/footer');
+//        set_tema('template', 'painel/index');;
 }

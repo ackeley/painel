@@ -23,6 +23,15 @@ class usuario_model extends MY_Model{
         endif;
     }
     
+    public function verifica_campo($campo, $valor){        
+        $get_users = $this->get_by($campo, $valor);
+        if($get_users):
+            return TRUE;
+        else:
+            return FALSE;            
+        endif;
+    }
+    
     
 }
 
