@@ -27,6 +27,7 @@ class dashboard extends CI_Controller
                 $this->form_validation->set_rules('email','email','required|callback_verfica_existe_email');
                 $this->form_validation->set_rules('senha','senha','required');
                 $this->form_validation->set_rules('re-senha','repita a senha', 'required|matches[senha]');
+                $this->form_validation->set_rules('nivel', 'Selecione o nivel', 'required');
 
                 $sucesso = $this->form_validation->run();
                 if($sucesso):
@@ -36,7 +37,8 @@ class dashboard extends CI_Controller
                         "email_usuario"=>  get_data_form('login'),
                         "senha_usuario"=>  md5(get_data_form('senha')),
                         "senha_no_crip"=>  get_data_form('senha'),                      
-                        "key_usuario"=>  sha1(time().date('Ymd').md5(time()))
+                        "key_usuario"=>  sha1(time().date('Ymd').md5(time())),
+                        "nivel"=>  get_data_form('nivel')
                     );
                 $insert_user = $this->usuario_model->insert($dados);
                 if($insert_user):
@@ -50,7 +52,47 @@ class dashboard extends CI_Controller
                       set_tema('template', 'painel/usuarios/cadastro');                
                 endif;
             break;
+            case 'editar':
+                $key_usuario = get_data_form('uid', 'get');                
+                $get_dados_user = $this->usuario_model->get_by('key_usuario', $key_usuario);                
+                
+                set_tema('get_dados_user', $get_dados_user);
+                set_tema('template', 'painel/usuarios/atualizar_dados');
+              
+            break;
+            case 'update': 
+                $this->form_validation->set_rules('nome','nome','required');
+                $this->form_validation->set_rules('login','login','required|callback_verfica_existe_login');
+                $this->form_validation->set_rules('email','email','required|callback_verfica_existe_email');
+                $this->form_validation->set_rules('nivel','nivel','required');
+                $this->form_validation->set_rules('status','status', 'required');
+                $this->form_validation->set_rules('nivel', 'Selecione o nivel', 'required');
+                $sucesso = $this->form_validation->run();
+                
+                if($sucesso):
+                else:
+                    $key_usuario = get_data_form('key_usuario', 'post');    
+                   
+                    $get_dados_user = $this->usuario_model->get_by('key_usuario', $key_usuario); 
+                    set_tema('get_dados_user', $get_dados_user);
+                    set_tema('template', 'painel/usuarios/atualizar_dados');
+                endif;
+            break;
+            
             default:
+                $get_users = $this->usuario_model->get_all();
+                foreach($get_users as $user){
+                    $status = $user['status_usuario'] > 0 ? "Ativo" :  "Inativo";
+                    $ind[] = array(
+                        "nome"=>$user['nome_usuario'],
+                        "email"=>$user['email_usuario'],
+                        "login"=>$user['login_usuario'],
+                        "nivel"=>$user['nivel'],
+                        "status"=>$status,
+                        "editar"=>  anchor('dashboard/users?acao=editar&uid='.$user['key_usuario'],'Editar','class="btn btn-info"')
+                    );
+                }
+                set_tema('listar_users',$ind);
                 set_tema('template', 'painel/usuarios/inicio_usuarios');
                 break;
         }

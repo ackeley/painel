@@ -13,19 +13,21 @@
                     Nome
                 </td>
                 <td>Email</td>
-                <td>Ativo</td>
-                <td>Administrador</td>
+                <td>Ativo / Inativo</td>
+                <td>Nivel</td>
                 <td>Ações</td>
             </tr>
+            {listar_users}
             <tr>
                 <td>
-                    Nome
+                    {nome}
                 </td>
-                <td>Email</td>
-                <td>Ativo</td>
-                <td>Administrador</td>
-                <td>Ações</td>
+                <td>{email}</td>
+                <td>{status}</td>
+                <td>{nivel}</td>
+                <td>{editar}{deletar}{desativar}{trocar_senha}{trnivel</td>
             </tr>
+            {/listar_users}
         </table>
     </div>
 </div>
