@@ -25,7 +25,7 @@
                 <td>{email}</td>
                 <td>{status}</td>
                 <td>{nivel}</td>
-                <td>{editar}{deletar}{desativar}{trocar_senha}{trnivel</td>
+                <td>{editar} {deletar} {trocar_senha}</td>
             </tr>
             {/listar_users}
         </table>

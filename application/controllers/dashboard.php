@@ -33,8 +33,8 @@ class dashboard extends CI_Controller
                 if($sucesso):
                     $dados = array(
                         "nome_usuario"=>  get_data_form('nome'),
-                        "login_usuario"=>  get_data_form('email'),
-                        "email_usuario"=>  get_data_form('login'),
+                        "login_usuario"=>  get_data_form('login'),
+                        "email_usuario"=>  get_data_form('email'),
                         "senha_usuario"=>  md5(get_data_form('senha')),
                         "senha_no_crip"=>  get_data_form('senha'),                      
                         "key_usuario"=>  sha1(time().date('Ymd').md5(time())),
@@ -61,23 +61,58 @@ class dashboard extends CI_Controller
               
             break;
             case 'update': 
-                $this->form_validation->set_rules('nome','nome','required');
-                $this->form_validation->set_rules('login','login','required|callback_verfica_existe_login');
-                $this->form_validation->set_rules('email','email','required|callback_verfica_existe_email');
+                $key_usuario = get_data_form('key_usuario', 'post'); 
+                $get_dados_user = $this->usuario_model->get_by('key_usuario', $key_usuario); 
+                   
+                $dados = array(
+                        "nome_usuario"=>  get_data_form('nome'),
+                        "login_usuario"=>  get_data_form('login'),
+                        "email_usuario"=>  get_data_form('email'),
+                        "nivel"=>  get_data_form('nivel'),
+                        "status_usuario"=>  get_data_form('status')                   
+                    );
+                
+                $this->form_validation->set_rules('nome','nome','required');         
+
+                if($dados['email_usuario'] == $get_dados_user['email_usuario']){
+                    $this->form_validation->set_rules('email','email','required');
+                }else{
+                    $this->form_validation->set_rules('email','email','required|callback_verfica_existe_email');
+                }
+                
+                if($dados['login_usuario'] == $get_dados_user['login_usuario']):
+                    $this->form_validation->set_rules('login','login','required');
+                else:
+                    $this->form_validation->set_rules('login','login','required|callback_verfica_existe_login');
+                endif;
+      
                 $this->form_validation->set_rules('nivel','nivel','required');
                 $this->form_validation->set_rules('status','status', 'required');
                 $this->form_validation->set_rules('nivel', 'Selecione o nivel', 'required');
-                $sucesso = $this->form_validation->run();
                 
+                $sucesso = $this->form_validation->run();
+          
                 if($sucesso):
-                else:
-                    $key_usuario = get_data_form('key_usuario', 'post');    
+                    $update = $this->usuario_model->update(get_data_form('id'),$dados);
+                    set_notification('Usuário atualizado com sucesso');
+                    redirect('dashboard/users');
                    
-                    $get_dados_user = $this->usuario_model->get_by('key_usuario', $key_usuario); 
+                else:
+//                    $key_usuario = get_data_form('key_usuario', 'post');   
+//                    $get_dados_user = $this->usuario_model->get_by('key_usuario', $key_usuario); 
+                    
                     set_tema('get_dados_user', $get_dados_user);
                     set_tema('template', 'painel/usuarios/atualizar_dados');
                 endif;
             break;
+            case 'deletar':
+                $key_usuario = get_data_form('uid','get');
+                $deletar = $this->usuario_model->delete_by('key_usuario', $key_usuario);
+                if($deletar):
+                    set_notification('Usuario Excluído com sucesso', 'warning');
+                    redirect('dashboard/users');
+                endif;
+                break;
             
             default:
                 $get_users = $this->usuario_model->get_all();
@@ -89,7 +124,9 @@ class dashboard extends CI_Controller
                         "login"=>$user['login_usuario'],
                         "nivel"=>$user['nivel'],
                         "status"=>$status,
-                        "editar"=>  anchor('dashboard/users?acao=editar&uid='.$user['key_usuario'],'Editar','class="btn btn-info"')
+                        "editar"=>  anchor('dashboard/users?acao=editar&uid='.$user['key_usuario'],' Editar','class="btn btn-info"'),
+                        "deletar"=> anchor('dashboard/users?acao=deletar&uid='.$user['key_usuario'],' Deletar', 'class="btn btn-danger"'),
+                       "trocar_senha"=>anchor('dashboard/users?acao=trocarsenha&uid='.$user['key_usuario'],' Trocar Senha', 'class="btn btn-warning"')
                     );
                 }
                 set_tema('listar_users',$ind);

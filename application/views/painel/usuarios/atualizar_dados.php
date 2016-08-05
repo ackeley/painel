@@ -31,9 +31,12 @@
             <legend class="text-info">Nível</legend>
        
         <?php
-            echo form_checkbox('nivel','1', set_checkbox('nivel', 1)). ' Administrador <br>';
-            echo form_checkbox('nivel','2', set_checkbox('nivel', 2)). ' Leitor <br>';
-            echo form_checkbox('nivel','3', set_checkbox('nivel', 3)). ' Redator <br>';
+        $niveis = array(
+            "1"=>"Administraçao",
+            "2"=>"Leitor",
+            "3"=>"Redator"
+        );
+            echo form_dropdown('nivel', $niveis, set_value('nivel', $get_dados_user['nivel']),'class="form-control"');
             echo form_error('Nível');
                       
         ?>
@@ -41,10 +44,13 @@
     </div>
     <div class="col-md-6">
          <fieldset>
-            <legend class="text-info">Nível</legend>
+            <legend class="text-info">Status</legend>
         <?php
-            echo form_radio('status','1', set_radio('status', $get_dados_user['status_usuario'])).' Ativo<br>';
-            echo form_radio('status','0', set_radio('status', $get_dados_user['status_usuario'])).' Inativo<br>';
+           $status = array(
+               "0"=>"Inativo",
+               "1"=>"Ativo"
+           );
+           echo form_dropdown('status', $status, set_value('status', $get_dados_user['status_usuario']),'class="form-control"');
         ?>
          </fieldset>
     </div>
